@@ -8,21 +8,21 @@ local startergui = game:GetService('StarterGui')
 
 local local_player = players.LocalPlayer
 
-local client = require(script.Parent.client)
-local cmd = require(script.Parent.cmd)
-local colors = require(script.Parent.colors)
-local helper = require(script.Parent.helper)
+local client = require('./client')
+local cmd = require('./cmd')
+local colors = require('./colors')
+local helper = require('./helper')
 local menu_key = client.config.ui_key
 
 local ui = script.Parent.Parent
 local toggle = ui.toggle
 local menu = ui.menu
+local resources = ui.resources
+
 local pages = menu.pages
 local header = menu.header
 
 local player_search : TextBox = pages.players:FindFirstChild('search')
-
-local resources = ui.resources
 
 local console = pages.console
 local logs = console.logs
@@ -144,7 +144,7 @@ module.remove_player_listing = function(player : Player)
 end
 
 module.init = function()
-	ui.Parent = local_player.PlayerGui
+	ui.Parent = local_player:FindFirstChild('PlayerGui')
 	module.lecture()
 
 	for _, page : Frame in pages:GetChildren() do

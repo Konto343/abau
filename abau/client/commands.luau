@@ -8,12 +8,13 @@ export type command = {
 	run : (client : Player, args : {any}, ...any) -> ()
 }
 
-local helper = require(script.Parent.helper)
-local _client = require(script.Parent.client)
-local colors = require(script.Parent.colors)
-local debug = require(script.Parent.debug)
+local helper = require('./helper')
+local _client = require('./client')
+local colors = require('./colors')
+local debug = require('./debug')
 
 local lighting = game:GetService('Lighting')
+local players = game:GetService('Players')
 
 module.data = {
 	{
@@ -132,7 +133,8 @@ module.data = {
 			end
 
 			if player then
-				game.Workspace.Camera.CameraSubject = char:FindFirstChild('Humanoid')
+				local camera =  game.Workspace:FindFirstChildWhichIsA('Camera')
+				camera.CameraSubject = char:FindFirstChild('Humanoid')
 			end
 		end
 	},
@@ -141,7 +143,8 @@ module.data = {
 		name = 'unview',
 		info="Resets your camera position",
 		run = function(client)
-			game.Workspace.Camera.CameraSubject = client.Character.Humanoid
+			local camera =  game.Workspace:FindFirstChildWhichIsA('Camera')
+			camera.CameraSubject = client.Character.Humanoid
 		end
 	},
 
@@ -201,7 +204,7 @@ module.data = {
 		requirements = 1,
 		info = "List the players in the server.",
 		run = function()
-			for i, player in game.Players:GetPlayers() do
+			for i, player in players:GetPlayers() do
 				helper.log(`{i} | {player.DisplayName} | @{player.Name} | {player.UserId}`)
 			end
 		end

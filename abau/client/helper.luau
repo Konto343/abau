@@ -1,10 +1,12 @@
 local module = {}
 
-local client = require(script.Parent.client)
-local colors = require(script.Parent.colors)
+local client = require('./client')
+local colors = require('./colors')
+
+local players = game:GetService('Players')
 
 module.seek_player = function(input : string) : Player | nil
-	for _, player in pairs(game.Players:GetPlayers()) do
+	for _, player in pairs(players:GetPlayers()) do
 		local IsDisplay = player.DisplayName:lower():sub(1, #input) == input:lower()
 		local IsName = player.Name:lower():sub(1, #input) == input:lower()
 

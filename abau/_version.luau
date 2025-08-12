@@ -38,5 +38,5 @@ UPDATES:
 ]]
 
 return {
-    _VERSION = '3.3.3'
+    _VERSION = '3.3.4'
 }

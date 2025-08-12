@@ -5,13 +5,13 @@ local module = {}
 local messaging = game:GetService('MessagingService')
 local players = game:GetService('Players')
 
-local cmd = require(script.Parent.cmd)
-local logs = require(script.Parent.logs)
-local helper = require(script.Parent.helper)
-local config = require(script.Parent.config)
-local types = require(script.Parent.types)
-local tasks = require(script.Parent.tasks)
-local _VERSION = require(script.Parent.Parent._VERSION)
+local cmd = require('./cmd')
+local logs = require('./logs')
+local helper = require('./helper')
+local config = require('./config')
+local types = require('./types')
+local tasks = require('./tasks')
+local _version = require('../_version')
 
 config.remote.OnServerInvoke = function(player : types.player, task, ...) : any | boolean
 	if task == 'command' then
@@ -28,7 +28,7 @@ config.remote.OnServerInvoke = function(player : types.player, task, ...) : any 
 	end
 
 	if task == 'version' then
-		return _VERSION._VERSION
+		return _version._VERSION
 	end
 
 	return false

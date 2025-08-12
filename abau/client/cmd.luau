@@ -2,10 +2,10 @@
 
 local module = {}
 
-local commands = require(script.Parent.commands)
-local helper = require(script.Parent.helper)
-local colors = require(script.Parent.colors)
-local client = require(script.Parent.client)
+local commands = require('./commands')
+local helper = require('./helper')
+local colors = require('./colors')
+local client = require('./client')
 
 module.init = function()
 	for _, data in commands.data do

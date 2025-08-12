@@ -2,12 +2,12 @@
 
 local module = {}
 
-local helper = require(script.Parent.helper)
-local config = require(script.Parent.config)
-local types = require(script.Parent.types)
-local logs = require(script.Parent.logs)
-local tasks = require(script.Parent.tasks)
-local colors = require(script.Parent.colors)
+local helper = require('./helper')
+local config = require('./config')
+local types = require('./types')
+local logs = require('./logs')
+local tasks = require('./tasks')
+local colors = require('./colors')
 
 local plrs = game:GetService('Players')
 local lighting = game:GetService('Lighting')
@@ -21,7 +21,7 @@ export type command = {
 	requirement : number | any,
 	args : {{string}} | nil,
 	info : string,
-	run : (client : types.player, args : {any}, ...any) -> ()
+	run : (client : types.player, args : {string}, ...any) -> ()
 }
 
 module.data = {
@@ -266,18 +266,26 @@ module.data = {
 		info = "List the bans of the entire game.",
 		run = function(client, args)
 			local user_id = tonumber(args[1])
-			local ban_history = plrs:GetBanHistoryAsync(user_id)
-			for _, item in ban_history do
-				local dr = item['DisplayReason']
-				local pr = item['PrivateReason']
-				local start = item['StartTime']
-				local duration = item['Duration']
-				local state = item['Ban'] and 'ban' or 'unban'
-				local place = (item['PlaceId'] == -1) and 'universe' or item['PlaceId']
 
-				local message = `[{start}] Reason: {dr} ({pr}) | For: {duration} | Action: {state} | Place: {place}`
-				helper.message(client, message)
+			if not user_id then
+				return
 			end
+
+			-- local ban_history = plrs:GetBanHistoryAsync(user_id)
+
+			-- TODO: make pages to table
+
+			-- for _, item in pairs(ban_history) do
+			-- 	local dr = item['DisplayReason']
+			-- 	local pr = item['PrivateReason']
+			-- 	local start = item['StartTime']
+			-- 	local duration = item['Duration']
+			-- 	local state = item['Ban'] and 'ban' or 'unban'
+			-- 	local place = (item['PlaceId'] == -1) and 'universe' or item['PlaceId']
+
+			-- 	local message = `[{start}] Reason: {dr} ({pr}) | For: {duration} | Action: {state} | Place: {place}`
+			-- 	helper.message(client, message)
+			-- end
 		end
 	},
 
@@ -709,7 +717,7 @@ module.data = {
 			for _, player : Player in pairs(helper.get_players(client, args[1])) do
 				task.spawn(function()
 					local yaai = config.resources.ui.yaai:Clone() :: ScreenGui
-					yaai.Parent = player.PlayerGui
+					yaai.Parent = player:FindFirstChild('PlayerGui')
 					local script = yaai:FindFirstChild('LocalScript', true) :: LocalScript
 
 					if script then
@@ -966,7 +974,7 @@ module.data = {
 		info = "Spawns a npc on a player",
 		run = function(client, args)
 			local target = args[2]
-			local amount = args[3] or 1
+			local amount = tonumber(args[3]) or 1
 
 			for _,player in pairs(helper.get_players(client, args[1])) do
 				local char : types.char_r6 = player.Character 
@@ -1033,10 +1041,11 @@ module.data = {
 		args = {{'player', 'Player'}, {'user_id', 'Number'}},
 		info = "Change a player's character",
 		run = function(client, args)
-			local target = args[2]
+			local target = tonumber(args[2]) or 0
+
 			for _,player in pairs(helper.get_players(client, args[1])) do
 				local char : types.char_r6 = player.Character 
-				char.Humanoid:ApplyDescription(game.players:GetHumanoidDescriptionFromUserId(target))
+				char.Humanoid:ApplyDescription(plrs:GetHumanoidDescriptionFromUserId(target))
 			end
 		end
 	},
@@ -1087,15 +1096,15 @@ module.data = {
 		requirement = 7,
 		info = "Toggle a grayscale to lighting",
 		run = function()
-			local gray = lighting:FindFirstChild("GrayScale")
+			local existing = lighting:FindFirstChild("grayscale")
 
-			if not gray then
-				gray = Instance.new('ColorCorrectionEffect')
-				gray.Parent = lighting
+			if not existing then
+				local gray = Instance.new('ColorCorrectionEffect')
 				gray.Name = "grayscale"
 				gray.Saturation = -1
+				gray.Parent = lighting
 			else
-				gray:Destroy()
+				existing:Destroy()
 			end
 		end
 	},
@@ -1155,7 +1164,7 @@ module.data = {
 		args = {{'value', 'Number'}},
 		info = "Set the gravity",
 		run = function(client, args)
-			workspace.Gravity = tonumber(args[1])
+			workspace.Gravity = tonumber(args[1]) or 100
 		end
 	},
 
@@ -1166,8 +1175,14 @@ module.data = {
 		info = 'Teleport people to another game',
 		run = function(client, args)
 			local players = helper.get_players(client, args[1])
+			local target_id = tonumber(args[2])
+
+			if not target_id then
+				return
+			end
+
 			tp:TeleportAsync(
-				tonumber(args[2]),
+				target_id,
 				players
 			)
 		end,
@@ -1180,12 +1195,14 @@ module.data = {
 		info = 'Teleport people to another server with an JobId',
 		run = function(client, args)
 			local players = helper.get_players(client, args[1])
+			local job_id = tostring(args[2])
+
 			tp:TeleportAsync(
 				game.PlaceId,
 				players,
 				Instance.new('TeleportOptions'):SetTeleportData({
 					placeId = game.PlaceId,
-					jobId = tostring(args[2])
+					jobId = job_id
 				})
 			)
 		end,

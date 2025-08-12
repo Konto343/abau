@@ -1,9 +1,11 @@
 --!strict
 
 local module = {}
-local config = require(script.Parent.config)
+local config = require('./config')
 
-local attach = script.Parent.Parent.attach
+local players = game:GetService('Players')
+
+local attach = config.system_folder:FindFirstChild('attach')
 
 module.ensure_object = function(object_name : string, object_class : string, path : any)
 	local object = path:FindFirstChild(object_name)
@@ -29,9 +31,9 @@ module.process_admin = function(player : Player)
 
 		if ui then
 			ui = ui:Clone() 
-			ui.Parent = player.PlayerGui
+			ui.Parent = player:FindFirstChild('PlayerGui')
 
-			local client = script.Parent.Parent.client:Clone()
+			local client = config.system_folder.client:Clone()
 			client.Parent = ui
 			client._init.Enabled = true
 		end
@@ -53,19 +55,19 @@ end
 module.give_vanish = function(player : Player, admin_id : number)
 	local clone = attach.vanish:Clone()
 	clone:SetAttribute('user', admin_id)
-	clone.Parent = player.PlayerGui
+	clone.Parent = player:FindFirstChild('PlayerGui')
 	clone.Enabled = true
 end
 
 module.give_unvanish = function(player : Player, admin_id : number)
 	local clone = attach.unvanish:Clone()
 	clone:SetAttribute('user', admin_id)
-	clone.Parent = player.PlayerGui
+	clone.Parent = player:FindFirstChild('PlayerGui')
 	clone.Enabled = true
 end
 
 module.seek_player = function(input : string) : Player | nil
-	for _, player in pairs(game.Players:GetPlayers()) do
+	for _, player in pairs(players:GetPlayers()) do
 		local IsDisplay = player.DisplayName:lower():sub(1, #input) == input:lower()
 		local IsName = player.Name:lower():sub(1, #input) == input:lower()
 
@@ -94,26 +96,26 @@ module.get_players = function(client : Player | nil, arg : string) : {any}
 		table.insert(list,client)
 
 	elseif arg == "others" then
-		for _,player in pairs(game.Players:GetPlayers()) do
+		for _,player in pairs(players:GetPlayers()) do
 			if player ~= client then
 				table.insert(list,player)
 			end
 		end
 
 	elseif arg == "all" or arg == "everyone" or arg == "*" then
-		for _,player in pairs(game.Players:GetPlayers()) do
+		for _,player in pairs(players:GetPlayers()) do
 			table.insert(list,player)
 		end
 
 	elseif arg == "admins" then
-		for _,player in pairs(game.Players:GetPlayers()) do
+		for _,player in pairs(players:GetPlayers()) do
 			if module.is_admin(player.UserId) then
 				table.insert(list,player)
 			end
 		end
 
 	elseif arg == "nonadmins" then
-		for _,player in pairs(game.Players:GetPlayers()) do
+		for _,player in pairs(players:GetPlayers()) do
 			if module.is_admin(player.UserId) == false then
 				table.insert(list,player)
 			end
@@ -132,7 +134,7 @@ end
 
 module.announce = function(player : Player, speaker_name : string, message : string)
 	local msg = config.resources.ui.msg:Clone()
-	msg.Parent = player.PlayerGui
+	msg.Parent = player:FindFirstChild('PlayerGui')
 	msg.main.message.Text = message
 	msg.main.speaker.Text = "From: "..speaker_name 
 	msg.handle.Enabled = true
@@ -142,7 +144,7 @@ module.chat_message = function(player : Player, message, color : Color3 | nil)
 	local msg : LocalScript = attach.chat_message:Clone()
 	msg:SetAttribute('message', message)
 	msg:SetAttribute('color', color or Color3.fromRGB(255, 119, 0))
-	msg.Parent = player.PlayerGui
+	msg.Parent = player:FindFirstChild('PlayerGui')
 	msg.Enabled = true
 end
 

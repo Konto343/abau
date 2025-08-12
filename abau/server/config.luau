@@ -15,6 +15,7 @@ type admin = {
 config.remote = nil :: any
 config.resources = nil :: any
 config.spawned_items = nil :: any
+config.system_folder = nil :: any
 
 config.admins = {
 	[3705633866] = { --konto343

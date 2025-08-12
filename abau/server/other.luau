@@ -5,9 +5,10 @@ export type service = {
     run : (module : ModuleScript) -> ()
 }
 
-local config = require(script.Parent.config)
+local config = require('./config')
 
-local server = game.ServerScriptService.server
+local server_scripts = game:GetService('ServerScriptService')
+local server = server_scripts:FindFirstChild('server')
 local modules = server:FindFirstChild('modules')
 
 if not modules then
