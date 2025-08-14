@@ -29,8 +29,9 @@ UPDATES:
 3.1.0 = Most likely the final update, otherwise just additions to commands.
 3.3.1 = Added vanish, unvanish and Auto-Vanish for admins.
 3.3.3 = Changed UI, brighter colors, more modern-ish, added Pages to UI (players, console, and notepad)
+3.3.5 = Modular UI with UI lib just made for this admin system. Cool.
 ]]
 
 return {
-    _VERSION = '3.3.4'
+    _VERSION = '3.3.5'
 }

@@ -134,17 +134,29 @@ function module:fill()
 	self.item.Size = UDim2.fromScale(1,1)
 end
 
+function module:canvas_adapt()
+	local canvas = self.item :: ScrollingFrame
+	local layout = self.item:FindFirstChildWhichIsA('UIListLayout', true) or self.item:FindFirstChildWhichIsA('UIGridLayout', true) :: UILayout & UIGridLayout
+	
+	canvas.DescendantAdded:Connect(function()
+		canvas.CanvasSize = UDim2.fromOffset(
+			layout.AbsoluteContentSize.X, layout.AbsoluteContentSize.Y + 20
+		)
+	end)
+end
+
 ------------------------------------------------------
 
 function module.new(ui_name : string)
 	local ui = Instance.new('ScreenGui')
 	ui.Name = ui_name
+	ui.ResetOnSpawn = false
 	ui.Parent = local_player:FindFirstChild('PlayerGui')
 
 	return ui
 end
 
-function module.window(x_px : number, y_px : number, parent : ScreenGui)
+function module.window(x_px : number, y_px : number, parent : ScreenGui, hide : boolean)
 	local item = Instance.new('Frame')
 	item.BackgroundColor3 = config.bg1
 	item.BorderColor3 = config.border
@@ -152,6 +164,7 @@ function module.window(x_px : number, y_px : number, parent : ScreenGui)
 	item.Size = UDim2.new(0, x_px, 0, y_px)
 	item.ClipsDescendants = true
 	item.Parent = parent
+	item.Visible = not hide
 
 	local self = setmetatable({}, module)
 	self.item = item :: Frame
@@ -181,7 +194,6 @@ function module.item(className : string, parent : BasePlayerGui, height : number
 	
 	item.BackgroundColor3 = config.bg2
 	item.BorderColor3 = config.border
-	item.BorderSizePixel = 4
 	item.Parent = parent
 	
 	if table.find({'TextLabel', 'TextBox'}, className) then

@@ -5,7 +5,7 @@ local config = require('./config')
 
 local players = game:GetService('Players')
 
-local attach = config.system_folder:FindFirstChild('attach')
+local attach = config.system_folder.attach
 
 module.ensure_object = function(object_name : string, object_class : string, path : any)
 	local object = path:FindFirstChild(object_name)
@@ -24,19 +24,11 @@ module.is_admin = function(user_id) : boolean
 end
 
 module.process_admin = function(player : Player)
-	local resources = config.resources
-
 	if module.is_admin(player.UserId) then
-		local ui : any = resources:FindFirstChild('ba_ui', true)
+		local player_gui = player:FindFirstChild('PlayerGui')
 
-		if ui then
-			ui = ui:Clone() 
-			ui.Parent = player:FindFirstChild('PlayerGui')
-
-			local client = config.system_folder.client:Clone()
-			client.Parent = ui
-			client._init.Enabled = true
-		end
+		local client = config.system_folder.client:Clone()
+		client.Parent = player_gui
 	end
 end
 

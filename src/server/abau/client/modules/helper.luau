@@ -1,7 +1,8 @@
 local module = {}
 
-local client = require('./client')
 local colors = require('./colors')
+local ui = require('./ui')
+local k_ui = require('./k_ui')
 
 local players = game:GetService('Players')
 
@@ -26,26 +27,15 @@ module.color_richtext = function(text : string, color : Color3)
 end
 
 module.log = function(message : string, color : Color3 | nil)
-	if not client.ui then
-		warn('Client UI not found!')
-		return
-	end
+	local label = k_ui.item('TextBox', ui.logs.item, 15)
+	label.item.Text = message
+	label.item.TextColor3 = color or colors.green
+	label.item.TextXAlignment = Enum.TextXAlignment.Left
+	label.item.BackgroundTransparency = 1
+	label.item.TextScaled = true
+	label.item.ClearTextOnFocus = false
 
-	local listing = client.ui:FindFirstChild('listing_template', true)
-
-	if not listing then
-		return
-	end
-
-	local logs = client.ui:FindFirstChild('logs', true)
-	local clone = listing:Clone() :: TextBox
-	clone.Text = message
-	clone.TextColor3 = color or colors.green
-	clone.Name = #logs:GetChildren() + 1
-	clone.Visible = true
-	clone.Parent = logs
-
-	return clone
+	return label.item
 end
 
 return module

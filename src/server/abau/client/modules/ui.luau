@@ -6,7 +6,7 @@ local config = require('./config_ui')
 local root = ui.new('abau')
 
 ------------------------- main
-local main = ui.window(900, 500, root)
+local main = ui.window(900, 500, root, true)
 main:draggable()
 main:anchor(ui.directions.center)
 main:list_layout(0)
@@ -28,10 +28,11 @@ header:anchor(ui.directions.top)
 local logs = ui.item('ScrollingFrame', main.item)
 logs.item.LayoutOrder = 2
 logs.item.Size = UDim2.fromScale(1, .85)
-logs:list_layout(10)
+logs:list_layout()
 logs:corner(10)
 logs:pad(10)
 logs:containerize(10)
+logs:canvas_adapt()
 module.logs = logs
 
 local bar = ui.item('TextBox', main.item)
@@ -51,7 +52,7 @@ end)
 module.bar = bar
 
 ------------------------- players
-local players = ui.window(300, 600, root)
+local players = ui.window(300, 600, root, true)
 players:draggable()
 players:anchor(ui.directions.center)
 players:list_layout(10)
@@ -86,7 +87,7 @@ for i=1,5 do
 end
 
 ------------------------- notepad
-local notepad = ui.window(400, 300, root)
+local notepad = ui.window(400, 300, root, true)
 notepad:draggable()
 notepad:anchor(ui.directions.left)
 notepad:list_layout(10)

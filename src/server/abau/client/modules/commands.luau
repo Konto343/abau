@@ -12,6 +12,7 @@ local helper = require('./helper')
 local _client = require('./client')
 local colors = require('./colors')
 local debug = require('./debug')
+local ui = require('./ui')
 
 local lighting = game:GetService('Lighting')
 local players = game:GetService('Players')
@@ -21,19 +22,7 @@ module.data = {
 		name = 'clear',
 		info = "Clear the command logs",
 		run = function(client)
-			local ba_ui = client.PlayerGui:WaitForChild('ba_ui', 10)
-
-			if not ba_ui then
-				return
-			end
-
-			local menu_logs = ba_ui:FindFirstChild('logs', true)
-
-			if not menu_logs then
-				return
-			end
-
-			for _, item in menu_logs:GetChildren() do
+			for _, item in ui.logs.item:GetChildren() do
 				if item:IsA('TextBox') then
 					item:Destroy()
 				end
@@ -46,19 +35,7 @@ module.data = {
 		args = {{'regex', 'String'}},
 		info = "Filter the command logs",
 		run = function(client, args)
-			local ba_ui = client.PlayerGui:FindFirstChild('ba_ui')
-
-			if not ba_ui then
-				return
-			end
-
-			local menu_logs = ba_ui:FindFirstChild('logs', true)
-
-			if not menu_logs then
-				return
-			end
-
-			for _, item in menu_logs:GetChildren() do
+			for _, item in ui.logs.item:GetChildren() do
 				if item:IsA('TextBox') and string.match(item.Text, args[1]) == nil then
 					item:Destroy()
 				end
@@ -80,28 +57,8 @@ module.data = {
 		name = 'noclip',
 		info="Toggle the user to fly and noclip through walls",
 		run = function()
-			if not _client.ui then
-				return
-			end
-			
-			local noclip = _client.ui:FindFirstChild('noclip', true)
-	
-			if noclip then
-				require(noclip):toggle()
-			end
-		end
-	},	
-
-	{
-		name = 'offline',
-		info="Turns a offline model",
-		run = function(client)
-			local ba_client = client.PlayerGui:FindFirstChild('ba_client', true)
-
-			if ba_client then
-				local mod = require(ba_client:FindFirstChild('offline'))
-				mod:toggle()
-			end
+			local noclip = require('./other/noclip')
+			noclip:toggle()
 		end
 	},	
 
@@ -143,7 +100,7 @@ module.data = {
 		name = 'unview',
 		info="Resets your camera position",
 		run = function(client)
-			local camera =  game.Workspace:FindFirstChildWhichIsA('Camera')
+			local camera = game.Workspace:FindFirstChildWhichIsA('Camera')
 			camera.CameraSubject = client.Character.Humanoid
 		end
 	},
