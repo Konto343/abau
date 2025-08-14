@@ -22,12 +22,16 @@ module.add_track = function(player : Player)
     track.LightInfluence = 1
     track.AlwaysOnTop = true
     track.Size = UDim2.fromOffset(200, 25)
+    track.Enabled = false
 
     local label = Instance.new('TextLabel')
     label.Size = UDim2.new(0, 200, 1, 0)
     label.BackgroundTransparency = 1
     label.TextStrokeTransparency = .5
     label.TextXAlignment = Enum.TextXAlignment.Center
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.RichText = true
+    label.FontFace.Bold = true
     label.Parent = track
 
     label.Text = `{player.DisplayName} (@{player.Name})`
@@ -44,7 +48,7 @@ module.add_track = function(player : Player)
             local to : Vector3 = to_hrp.Position
             local distance = helper.decimal_limit((from - to).Magnitude, 1)
             local dis = helper.color_richtext(`[{distance}]`, colors.orange)
-            track.Text = `{player.DisplayName} (@{player.Name}) {dis}`
+            label.Text = `{player.DisplayName} (@{player.Name}) {dis}`
 
             task.wait(client.debug_update_speed)
         end
@@ -71,12 +75,13 @@ module.add_line = function(player : Player)
     line_beam.FaceCamera = true
     line_beam.Color = ColorSequence.new(
         Color3.fromRGB(206, 141, 108),
-        Color3.fromRGB(255, 179, 0)
+        colors.orange
     )
     line_beam.Brightness = 3
     line_beam.LightEmission = 0
     line_beam.LightInfluence = 0
     line_beam.TextureMode = Enum.TextureMode.Static
+    line_beam.Enabled = false
 
     local char = player.Character or player.CharacterAdded:Wait()
     line_beam.Parent = char

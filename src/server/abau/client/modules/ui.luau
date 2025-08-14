@@ -1,12 +1,10 @@
 local module = {}
 
 local ui = require('./k_ui')
-local config = require('./config_ui')
-
 local root = ui.new('abau')
 
 ------------------------- main
-local main = ui.window(900, 500, root, true)
+local main = ui.window(1200, 600, root, true)
 main:draggable()
 main:anchor(ui.directions.center)
 main:list_layout(0)
@@ -23,7 +21,6 @@ header.item.LayoutOrder = 1
 header.item.TextXAlignment = Enum.TextXAlignment.Left
 header.item.TextScaled = true
 header.item.FontFace.Bold = true
-header:anchor(ui.directions.top)
 
 local logs = ui.item('ScrollingFrame', main.item)
 logs.item.LayoutOrder = 2
@@ -42,7 +39,7 @@ bar.item.Text = ''
 bar.item.TextScaled = true
 bar.item.PlaceholderText = 'Command Bar'
 bar.item.TextXAlignment = Enum.TextXAlignment.Left
-bar.item.BackgroundColor3 = config.bg3
+bar.item.BackgroundColor3 = ui.config.bg3
 bar:corner(10)
 bar:pad(10)
 bar:containerize(10)
@@ -54,7 +51,7 @@ module.bar = bar
 ------------------------- players
 local players = ui.window(400, 600, root, true)
 players:draggable()
-players:anchor(ui.directions.center)
+players:anchor(ui.directions.left)
 players:list_layout(10)
 players:pad(20)
 players:corner(10)
@@ -68,7 +65,6 @@ players_header.item.LayoutOrder = 1
 players_header.item.TextXAlignment = Enum.TextXAlignment.Left
 players_header.item.TextScaled = true
 players_header.item.FontFace.Bold = true
-players_header:anchor(ui.directions.top)
 
 local players_body = ui.item('ScrollingFrame', players.item)
 players_body.item.LayoutOrder = 2
@@ -83,7 +79,7 @@ module.players_container = players_body
 ------------------------- notepad
 local notepad = ui.window(400, 300, root, true)
 notepad:draggable()
-notepad:anchor(ui.directions.left)
+notepad:anchor(ui.directions.right)
 notepad:list_layout(10)
 notepad:pad(20)
 notepad:corner(10)
@@ -97,9 +93,10 @@ notepad_header.item.LayoutOrder = 1
 notepad_header.item.TextXAlignment = Enum.TextXAlignment.Left
 notepad_header.item.TextScaled = true
 notepad_header.item.FontFace.Bold = true
-notepad_header:anchor(ui.directions.top)
 
 local notepad_textbox = ui.item('TextBox', notepad.item)
+notepad_textbox.item.Text = ''
+notepad_textbox.item.PlaceholderText = '...'
 notepad_textbox.item.LayoutOrder = 2
 notepad_textbox.item.Size = UDim2.fromScale(1, .9)
 notepad_textbox.item.TextXAlignment = Enum.TextXAlignment.Left

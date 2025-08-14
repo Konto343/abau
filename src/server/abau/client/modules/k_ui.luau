@@ -1,5 +1,3 @@
-local config = require('./config_ui')
-	
 local uis = game:GetService('UserInputService')
 local players = game:GetService('Players')
 
@@ -16,6 +14,19 @@ module.directions = {
 
 	['bottom'] = Vector2.new(.5, 0),
 	['top'] = Vector2.new(.5, 1),
+}
+
+module.config = {
+	bg1 = Color3.fromRGB(25, 25, 25),
+	bg2 = Color3.fromRGB(38, 38, 38),
+	bg3 = Color3.fromRGB(51, 51, 51),
+	
+	fg1 = Color3.fromRGB(255, 255, 255),
+	
+	border = Color3.fromRGB(35, 35, 35),
+	accent = Color3.fromRGB(216, 174, 102),
+	
+	font = Enum.Font.RobotoMono
 }
 
 function module:pad(pad_amount : number)
@@ -160,8 +171,8 @@ end
 
 function module.window(x_px : number, y_px : number, parent : ScreenGui, hide : boolean)
 	local item = Instance.new('Frame')
-	item.BackgroundColor3 = config.bg1
-	item.BorderColor3 = config.border
+	item.BackgroundColor3 = module.config.bg1
+	item.BorderColor3 = module.config.border
 	item.BorderSizePixel = 4
 	item.Size = UDim2.new(0, x_px, 0, y_px)
 	item.ClipsDescendants = true
@@ -178,8 +189,8 @@ function module.header(parent : BasePlayerGui, text : string, height : number | 
 	local item = Instance.new('TextLabel')
 	item.BackgroundTransparency = 1
 	item.Size = UDim2.new(1, 0, 0, height or 20)
-	item.TextColor3 = config.fg1
-	item.Font = config.font
+	item.TextColor3 = module.config.fg1
+	item.Font = module.config.font
 	item.Text = text
 	item.Parent = parent
 	
@@ -194,17 +205,17 @@ function module.item(className : string, parent : BasePlayerGui, height : number
 	local item = Instance.new(className)
 	item.Size = UDim2.new(1, 0, 0, height or 20)
 	
-	item.BackgroundColor3 = config.bg2
-	item.BorderColor3 = config.border
+	item.BackgroundColor3 = module.config.bg2
+	item.BorderColor3 = module.config.border
 	item.Parent = parent
 	
 	if table.find({'TextLabel', 'TextBox'}, className) then
-		item.TextColor3 = config.fg1
-		item.Font = config.font
+		item.TextColor3 = module.config.fg1
+		item.Font = module.config.font
 	end
 
 	local self = setmetatable({}, module)
-	self.item = item :: TextLabel & TextBox & Frame & TextButton & ScrollingFrame
+	self.item = item :: TextLabel & TextBox & Frame & TextButton & ScrollingFrame & ImageLabel
 	
 	return self
 end

@@ -14,10 +14,7 @@ config.spawned_items.Name = 'spawned_items'
 config.spawned_items.Parent = workspace
 
 config.resources = server_storage:FindFirstChild('ba_resources')
-
 config.system_folder = script.Parent
-
-print(config.system_folder)
 
 for _, mod in system.server:GetChildren() do
     if mod:IsA('ModuleScript') then

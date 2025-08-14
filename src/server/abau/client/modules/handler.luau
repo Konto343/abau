@@ -102,15 +102,17 @@ module.events = {
 			
 			table.insert(command_history, user_input)
 			bar.Text = ''
+			task.wait()
+			bar:CaptureFocus()
 
 			for i=1, 10 do --if you see this, then uh... This code is Perfect.
 				logs.CanvasPosition = Vector2.new(0, 10^6)
 				task.wait()
 			end
+		else --entered with no input
+			ui.main.item.Visible = false
+			bar:ReleaseFocus()
 		end
-
-		ui.main.item.Visible = false
-		bar:ReleaseFocus()
 
 		pointer_pos = -1
 	end)

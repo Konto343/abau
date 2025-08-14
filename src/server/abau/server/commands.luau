@@ -139,7 +139,7 @@ module.data = {
 		name = 'process_admin',
 		requirement = 10,
 		args = {{'player', 'Player'}},
-		info = "[VERY DANGEOUS COMMAND] Reprocess a player through the admin system (Grants UI)",
+		info = "Reprocess a player through the admin system with UI.",
 		run = function(client, args)
 			local players = helper.get_players(client, args[1])	
 
