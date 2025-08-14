@@ -12,10 +12,6 @@ module.data = {
 }
 
 module.add_track = function(player : Player)
-    if not client.ui then
-        return
-    end
-
     if module.data.players_overhead[player.UserId] then
         return
     end
