@@ -52,7 +52,7 @@ end)
 module.bar = bar
 
 ------------------------- players
-local players = ui.window(300, 600, root, true)
+local players = ui.window(400, 600, root, true)
 players:draggable()
 players:anchor(ui.directions.center)
 players:list_layout(10)
@@ -62,29 +62,23 @@ players:bind(Enum.KeyCode.Semicolon, function()
 	players.item.Visible = not players.item.Visible
 end)
 
-local header = ui.header(players.item, 'Players')
-header.item.Size = UDim2.fromScale(1, .05)
-header.item.LayoutOrder = 1
-header.item.TextXAlignment = Enum.TextXAlignment.Left
-header.item.TextScaled = true
-header.item.FontFace.Bold = true
-header:anchor(ui.directions.top)
+local players_header = ui.header(players.item, 'Players')
+players_header.item.Size = UDim2.fromScale(1, .05)
+players_header.item.LayoutOrder = 1
+players_header.item.TextXAlignment = Enum.TextXAlignment.Left
+players_header.item.TextScaled = true
+players_header.item.FontFace.Bold = true
+players_header:anchor(ui.directions.top)
 
-local body = ui.item('ScrollingFrame', players.item)
-body.item.LayoutOrder = 2
-body.item.Size = UDim2.fromScale(1, .95)
-body.item.ScrollBarThickness = 2
-body:list_layout(10)
-body:corner(10)
-body:pad(10)
-body:pad_fix(10)
-module.players_container = body
-
-for i=1,5 do
-	local listing = ui.item('Frame', body.item, 50)
-	listing.item.BackgroundColor3 = config.bg3
-	listing:corner(10)
-end
+local players_body = ui.item('ScrollingFrame', players.item)
+players_body.item.LayoutOrder = 2
+players_body.item.Size = UDim2.fromScale(1, .95)
+players_body.item.ScrollBarThickness = 2
+players_body:list_layout(10)
+players_body:corner(10)
+players_body:pad(10)
+players_body:pad_fix(10)
+module.players_container = players_body
 
 ------------------------- notepad
 local notepad = ui.window(400, 300, root, true)
@@ -97,22 +91,22 @@ notepad:bind(Enum.KeyCode.Quote, function()
 	notepad.item.Visible = not notepad.item.Visible
 end)
 
-local header = ui.header(notepad.item, 'Notepad')
-header.item.Size = UDim2.fromScale(1, .1)
-header.item.LayoutOrder = 1
-header.item.TextXAlignment = Enum.TextXAlignment.Left
-header.item.TextScaled = true
-header.item.FontFace.Bold = true
-header:anchor(ui.directions.top)
+local notepad_header = ui.header(notepad.item, 'Notepad')
+notepad_header.item.Size = UDim2.fromScale(1, .1)
+notepad_header.item.LayoutOrder = 1
+notepad_header.item.TextXAlignment = Enum.TextXAlignment.Left
+notepad_header.item.TextScaled = true
+notepad_header.item.FontFace.Bold = true
+notepad_header:anchor(ui.directions.top)
 
-local body = ui.item('TextBox', notepad.item)
-body.item.LayoutOrder = 2
-body.item.Size = UDim2.fromScale(1, .9)
-body.item.TextXAlignment = Enum.TextXAlignment.Left
-body.item.TextScaled = true
-body.item.MultiLine = true
-body:corner(10)
-body:pad(10)
-body:pad_fix(10)
+local notepad_textbox = ui.item('TextBox', notepad.item)
+notepad_textbox.item.LayoutOrder = 2
+notepad_textbox.item.Size = UDim2.fromScale(1, .9)
+notepad_textbox.item.TextXAlignment = Enum.TextXAlignment.Left
+notepad_textbox.item.TextScaled = true
+notepad_textbox.item.MultiLine = true
+notepad_textbox:corner(10)
+notepad_textbox:pad(10)
+notepad_textbox:pad_fix(10)
 
 return module

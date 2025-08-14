@@ -20,36 +20,45 @@ module.add_track = function(player : Player)
         return
     end
 
-    local track = client.ui:FindFirstChild('track', true)
+    local track = Instance.new('BillboardGui')
+    track.Name = 'track'
+    track.ExtentsOffsetWorldSpace = Vector3.new(0, 3, 0)
+    track.LightInfluence = 1
+    track.AlwaysOnTop = true
+    track.Size = UDim2.fromOffset(200, 25)
 
-    if track then
-        local clone = track:Clone()
-        clone.TextLabel.Text = `{player.DisplayName} (@{player.Name})`
+    local label = Instance.new('TextLabel')
+    label.Size = UDim2.new(0, 200, 1, 0)
+    label.BackgroundTransparency = 1
+    label.TextStrokeTransparency = .5
+    label.TextXAlignment = Enum.TextXAlignment.Center
+    label.Parent = track
 
-        local update_loop = task.spawn(function()
-            while true do
-                local char = player.Character or player.CharacterAdded:Wait()
-                clone.Parent = char:FindFirstChild('Head')
+    label.Text = `{player.DisplayName} (@{player.Name})`
 
-                local from_hrp = char:WaitForChild('HumanoidRootPart', 10^9)
-                local to_hrp = local_player.Character:WaitForChild('HumanoidRootPart', 10^9)
+    local update_loop = task.spawn(function()
+        while true do
+            local char = player.Character or player.CharacterAdded:Wait()
+            track.Parent = char:FindFirstChild('Head')
 
-                local from : Vector3 = from_hrp.Position
-                local to : Vector3 = to_hrp.Position
-                local distance = helper.decimal_limit((from - to).Magnitude, 1)
-                local dis = helper.color_richtext(`[{distance}]`, colors.orange)
-                clone.TextLabel.Text = `{player.DisplayName} (@{player.Name}) {dis}`
+            local from_hrp = char:WaitForChild('HumanoidRootPart', 10^9)
+            local to_hrp = local_player.Character:WaitForChild('HumanoidRootPart', 10^9)
 
-                task.wait(client.debug_update_speed)
-            end
-        end)
+            local from : Vector3 = from_hrp.Position
+            local to : Vector3 = to_hrp.Position
+            local distance = helper.decimal_limit((from - to).Magnitude, 1)
+            local dis = helper.color_richtext(`[{distance}]`, colors.orange)
+            track.Text = `{player.DisplayName} (@{player.Name}) {dis}`
 
-        clone.Destroying:Once(function()
-            task.cancel(update_loop)
-        end)
+            task.wait(client.debug_update_speed)
+        end
+    end)
 
-        module.data.players_overhead[player.UserId] = clone
-    end
+    track.Destroying:Once(function()
+        task.cancel(update_loop)
+    end)
+
+    module.data.players_overhead[player.UserId] = track
 end
 
 module.remove_track = function(player : Player)
@@ -59,29 +68,30 @@ module.remove_track = function(player : Player)
 end
 
 module.add_line = function(player : Player)
-    if not client.ui then
-        return
-    end
+    local line_beam = Instance.new('Beam')
+    line_beam.Segments = 10
+    line_beam.Width0 = 0.1
+    line_beam.Width1 = 1
+    line_beam.FaceCamera = true
+    line_beam.Color = ColorSequence.new(
+        Color3.fromRGB(206, 141, 108),
+        Color3.fromRGB(255, 179, 0)
+    )
+    line_beam.Brightness = 3
+    line_beam.LightEmission = 0
+    line_beam.LightInfluence = 0
+    line_beam.TextureMode = Enum.TextureMode.Static
 
-    if module.data.players_line[player.UserId] then
-        return
-    end
+    local char = player.Character or player.CharacterAdded:Wait()
+    line_beam.Parent = char
 
-    local line = client.ui:FindFirstChild('line_beam', true)
+    local from_hrp = char:WaitForChild('HumanoidRootPart', 10^9)
+    local to_hrp = local_player.Character:WaitForChild('HumanoidRootPart', 10^9)
 
-    if line then
-        local char = player.Character or player.CharacterAdded:Wait()
-        local clone = line:Clone() :: Beam
-        clone.Parent = char
+    line_beam.Attachment0 = to_hrp:FindFirstChild('RootAttachment', true)
+    line_beam.Attachment1 = from_hrp:FindFirstChild('RootAttachment', true)
 
-        local from_hrp = char:WaitForChild('HumanoidRootPart', 10^9)
-        local to_hrp = local_player.Character:WaitForChild('HumanoidRootPart', 10^9)
-
-        clone.Attachment0 = to_hrp:FindFirstChild('RootAttachment', true)
-        clone.Attachment1 = from_hrp:FindFirstChild('RootAttachment', true)
-
-        module.data.players_line[player.UserId] = clone
-    end
+    module.data.players_line[player.UserId] = line_beam
 end
 
 module.remove_line = function(player : Player)

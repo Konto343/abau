@@ -10,10 +10,12 @@ module.__index = module
 
 module.directions = {
 	['center'] = Vector2.new(.5, .5),
+	
 	['right'] = Vector2.new(1, .5),
-	['left'] = Vector2.new(.5, .5),
-	['bottom'] = Vector2.new(.5, .5),
-	['top'] = Vector2.new(.5, .5),
+	['left'] = Vector2.new(0, .5),
+
+	['bottom'] = Vector2.new(.5, 0),
+	['top'] = Vector2.new(.5, 1),
 }
 
 function module:pad(pad_amount : number)
