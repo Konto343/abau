@@ -9,10 +9,10 @@ local logs = require('./logs')
 local tasks = require('./tasks')
 local colors = require('./colors')
 
-local plrs = game:GetService('Players')
+local players = game:GetService('Players')
 local lighting = game:GetService('Lighting')
-local ts = game:GetService('TweenService')
-local tp = game:GetService('TeleportService')
+local tween = game:GetService('TweenService')
+local teleport = game:GetService('TeleportService')
 local debris = game:GetService('Debris')
 local messaging = game:GetService('MessagingService')
 
@@ -103,7 +103,7 @@ module.data = {
 			
 			for _, msg in logs.join_leaves do
 				local color = msg:match('JOIN') and colors.blue or colors.orange
-				helper.chat_message(client, msg, color)
+				helper.message(client, msg, color)
 			end
 		end,
 	},
@@ -197,7 +197,7 @@ module.data = {
 		args = {{'task', 'String'}, {'args', '...'}},
 		info = 'Make yourself disappear for other players',
 		run = function(client, args)
-			for _, player in plrs:GetPlayers() do
+			for _, player in players:GetPlayers() do
 				if player.UserId == client.UserId then
 					continue
 				end
@@ -212,7 +212,7 @@ module.data = {
 		args = {{'task', 'String'}, {'args', '...'}},
 		info = 'Make yourself disappear for other players',
 		run = function(client, args)
-			for _, player in plrs:GetPlayers() do
+			for _, player in players:GetPlayers() do
 				if player.UserId == client.UserId then
 					continue
 				end
@@ -271,7 +271,7 @@ module.data = {
 				return
 			end
 
-			-- local ban_history = plrs:GetBanHistoryAsync(user_id)
+			-- local ban_history = players:GetBanHistoryAsync(user_id)
 
 			-- TODO: make pages to table
 
@@ -301,7 +301,7 @@ module.data = {
 				table.insert(user_ids, player.UserId)
 			end
 
-			plrs:BanAsync({
+			players:BanAsync({
 				UserIds = user_ids,
 				ApplyToUniverse = true,
 				Duration = tonumber(args[2] or -1), --'-1' for infinite ban
@@ -320,7 +320,7 @@ module.data = {
 		args = {{'user_id', 'Number'}},
 		info = "Unban a person",
 		run = function(client, args)
-			plrs:UnbanAsync({
+			players:UnbanAsync({
 				UserIds = {tostring(args[1])},
 				ApplyToUniverse = true
 			})
@@ -344,22 +344,21 @@ module.data = {
 		requirement = 10,
 		info = 'List all admins currently in the system.',
 		run = function(client)
-
-			for userid, data in config.admins do
+			for _, data in config.admins do
 				local message = ''
 
 				local user = 'N/A'
 				local color = colors.green
 
 				pcall(function()
-					user = plrs:GetNameFromUserIdAsync(userid)
+					user = players:GetNameFromUserIdAsync(data.user_id)
 				end)
 
-				if userid == client.UserId then
-					message = ('%s (%i) => LVL %i'):format(user, userid, data.rank)
+				if data.user_id == client.UserId then
+					message = ('[YOU] %s (%i) => LVL %i'):format(user, data.user_id, data.rank)
 					color = colors.orange
 				else
-					message = ('%s (%i) => LVL %i'):format(user, userid, data.rank)
+					message = ('%s (%i) => LVL %i'):format(user, data.user_id, data.rank)
 				end
 
 				helper.message(client, message, color)
@@ -726,7 +725,7 @@ module.data = {
 
 					task.wait(5.3)
 
-					plrs:BanAsync({
+					players:BanAsync({
 						UserIds = {player.UserId},
 						Duration = tonumber(args[3]) or -1,
 						DisplayReason = 'HA HA HA HAA HA HA HA HAA HAA HA',
@@ -1045,7 +1044,7 @@ module.data = {
 
 			for _,player in pairs(helper.get_players(client, args[1])) do
 				local char : types.char_r6 = player.Character 
-				char.Humanoid:ApplyDescription(plrs:GetHumanoidDescriptionFromUserId(target))
+				char.Humanoid:ApplyDescription(players:GetHumanoidDescriptionFromUserId(target))
 			end
 		end
 	},
@@ -1119,7 +1118,7 @@ module.data = {
 			local geo_lat = tonumber(args[2])
 			local tween_time = tonumber(args[3])
 
-			ts:Create(lighting,TweenInfo.new(tween_time),{
+			tween:Create(lighting,TweenInfo.new(tween_time),{
 				ClockTime = clock_time,
 				GeographicLatitude = geo_lat
 			}):Play()
@@ -1137,7 +1136,7 @@ module.data = {
 			local tween_time = tonumber(args[3]) or 2
 
 			local Info = TweenInfo.new(tween_time)
-			ts:Create(lighting,Info,{
+			tween:Create(lighting,Info,{
 				FogStart = start_distance,
 				FogEnd = end_distance
 			}):Play()
@@ -1181,7 +1180,7 @@ module.data = {
 				return
 			end
 
-			tp:TeleportAsync(
+			teleport:TeleportAsync(
 				target_id,
 				players
 			)
@@ -1197,7 +1196,7 @@ module.data = {
 			local players = helper.get_players(client, args[1])
 			local job_id = tostring(args[2])
 
-			tp:TeleportAsync(
+			teleport:TeleportAsync(
 				game.PlaceId,
 				players,
 				Instance.new('TeleportOptions'):SetTeleportData({

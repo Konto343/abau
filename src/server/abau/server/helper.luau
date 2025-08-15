@@ -19,8 +19,23 @@ module.ensure_object = function(object_name : string, object_class : string, pat
 	return object
 end
 
-module.is_admin = function(user_id) : boolean
-	return (config.admins[user_id].rank >= config.system.admin_level) and true or false
+module.get_admin = function(user_id : number) : config.admin | nil
+	for _, data in config.admins do
+		if data.user_id == user_id then
+			return data
+		end
+	end
+	return nil
+end
+
+module.is_admin = function(user_id : number) : boolean
+	local admin = module.get_admin(user_id)
+
+	if not admin then
+		return false
+	end
+
+	return admin.rank >= config.system.admin_level
 end
 
 module.process_admin = function(player : Player)
@@ -33,11 +48,26 @@ module.process_admin = function(player : Player)
 end
 
 module.update_admin = function(user_id : number, target_rank : number)
-	config.admins[user_id] = {rank = target_rank or 1}
+	local existing = module.get_admin(user_id)
+
+	if not existing then
+		config.admins[#config.admins+1] = {
+			user_id = user_id, 
+			rank = target_rank or 1
+		}
+		return
+	end
+
+	existing.rank = target_rank
 end
 
 module.get_player_rank = function(user_id : number)
-	return config.admins[user_id].rank
+	local admin = module.get_admin(user_id)
+
+	if not admin then
+		return -1
+	end
+	return admin.rank
 end
 
 module.message = function(client : Player, message : string, color : Color3 | nil)

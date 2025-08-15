@@ -2,7 +2,7 @@ local module = {}
 
 local colors = require('./colors')
 local ui = require('./ui')
-local k_ui = require('./k_ui')
+local k_ui = require('./depend/ui_lib')
 
 local players = game:GetService('Players')
 

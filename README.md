@@ -5,7 +5,6 @@ Another Roblox administrator system for ~~my~~ games to use.
 
 Features:
 - Service Hooking (Chat Tags, Overhead Tags)
-- Logging to Discord Webhooks
 - Modular UI (In-Dev)
 - Basic Moderation (Banning, kicking, Ban listing)
 - Client visual debugging (Player Trackers, Line ESP)

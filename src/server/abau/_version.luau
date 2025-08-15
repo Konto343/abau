@@ -34,5 +34,6 @@ UPDATES:
 ]]
 
 return {
-    _VERSION = '3.3.6'
+    _VERSION = '3.3.7',
+    _NAME = 'ABAU'
 }

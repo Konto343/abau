@@ -42,18 +42,17 @@ module.events = {
 
 		logs.join_leaves[#logs.join_leaves+1] = `[{os.date('%c')}] JOIN => {player.DisplayName} | {player.UserId}`
 
-		for admin_id, admin in config.admins do
-			--dont hide self. unless you want to?
-			if admin_id == player.UserId then
+		for _, admin in config.admins do
+			if admin.user_id == player.UserId then
 				continue 
 			end
 			if admin.auto_vanish then
-				helper.give_vanish(player, admin_id)
+				helper.give_vanish(player, admin.user_id)
 			end
 		end
 
 		if config.system.slock and not helper.is_admin(player.UserId) then
-			player:Kick('This server has a Server Lock turned on by a Admin. Please join another server or wait -_-')
+			player:Kick('This server has a Server Lock set by a Admin. Please join another server or wait -_-')
 		end
 		
 		player.CharacterAdded:Once(function()
@@ -94,7 +93,7 @@ module.events = {
 		local data = message.Data :: {}
 		local time_sent = message.Sent :: string
 		
-		print(`[BA] Server task recieved => {data[1]} at {time_sent}`)
+		print(`[{_version._NAME}] Server task recieved => {data[1]} at {time_sent}`)
 
 		local task_name = data[1]
 		local task_data = tasks.get_task(task_name)

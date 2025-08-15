@@ -2,14 +2,13 @@
 
 local config = {}
 
-type admin = {
-	[number] : {
-		rank : number,
-		auto_vanish : boolean | nil,
+export type admin = {
+	user_id : number,
+	rank : number,
+	auto_vanish : boolean | nil,
 
-		tag_name : string | nil,
-		tag_color : Color3 | nil,
-	}
+	tag_name : string | nil,
+	tag_color : Color3 | nil,
 }
 
 config.remote = nil :: any
@@ -17,32 +16,34 @@ config.resources = nil :: any
 config.spawned_items = nil :: any
 config.system_folder = nil :: any
 
+config.discord_webhook = nil
+
 config.admins = {
-	[3705633866] = { --konto343
+	-- { --template
+	-- 	user_id = 00000,
+	-- 	rank = 3,
+	-- }, 
+
+	{ --studio
+		user_id = -1,
 		rank = 10,
 		auto_vanish = true,
-		tag_name = 'Fish',
-		tag_color = Color3.fromRGB(255, 0, 34)
-	}, 
-
-	[3965223374] = { --monarch
-		rank = 10,
-		tag_name = 'Crow',
-		tag_color = Color3.fromRGB(0, 0, 127)
 	},
 
-	[-1] = { --studio
-		rank = 10,
+	{ --konto343
+		user_id = 3705633866,
+		rank = 1,
 		auto_vanish = true,
-	} 
-} :: admin
+		tag_name = 'Fish',
+		tag_color = Color3.fromRGB(0, 102, 255)
+	}, 
+} :: {admin}
 
 config.system = {
 	--the admin UI will only be given those whose ranks are higher than this. (At join)
 	admin_level = 5,
 	--command prefix for chat. 
 	command_prefix = "$",
-	--vars
 	slock = false
 }
 

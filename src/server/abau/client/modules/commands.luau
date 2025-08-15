@@ -57,7 +57,7 @@ module.data = {
 		name = 'noclip',
 		info="Toggle the user to fly and noclip through walls",
 		run = function()
-			local noclip = require('./other/noclip')
+			local noclip = require('./depend/noclip')
 			noclip:toggle()
 		end
 	},	
