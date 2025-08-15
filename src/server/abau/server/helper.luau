@@ -1,7 +1,7 @@
 --!strict
 
 local module = {}
-local config = require('./config')
+local config = require(script.Parent.config)
 
 local players = game:GetService('Players')
 

@@ -1,6 +1,6 @@
 local module = {}
 
-local config = require('./config')
+local config = require(script.Parent.config)
 
 local server = game:GetService('ServerScriptService')
 local modules = server:FindFirstChild('modules', true)

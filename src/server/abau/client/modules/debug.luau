@@ -1,8 +1,8 @@
 local module = {}
 
-local client = require('./client')
-local helper = require('./helper')
-local colors = require('./colors')
+local client = require(script.Parent.client)
+local helper = require(script.Parent.helper)
+local colors = require(script.Parent.colors)
 
 local local_player = game:GetService('Players').LocalPlayer
 

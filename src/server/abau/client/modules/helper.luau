@@ -1,8 +1,8 @@
 local module = {}
 
-local colors = require('./colors')
-local ui = require('./ui')
-local k_ui = require('./depend/ui_lib')
+local colors = require(script.Parent.colors)
+local ui = require(script.Parent.ui)
+local k_ui = require(script.Parent.depend.ui_lib)
 
 local players = game:GetService('Players')
 
@@ -47,14 +47,14 @@ module.add_player_listing = function(player : Player)
 
 	local image = k_ui.item('ImageLabel', listing.item)
 	image.item.BackgroundColor3 = k_ui.config.bg3
-	image.item.Size = UDim2.new(.25, 0, 1, 0)
+	image.item.Size = UDim2.fromScale(.25, 1)
 	image.item.ScaleType = Enum.ScaleType.Fit
 	image.item.BorderSizePixel = 0
 	image:anchor(k_ui.directions.left)
 
 	local text_label = k_ui.item('TextLabel', listing.item)
 	text_label.item.BackgroundTransparency = 1
-	text_label.item.Size = UDim2.new(.75, 0, 1, 0)
+	text_label.item.Size = UDim2.fromScale(.75, 1)
 	text_label.item.TextScaled = true
 	text_label.item.Text = `{player.Name}\n@{player.DisplayName}\n{player.UserId}`
 	text_label:anchor(k_ui.directions.right)

@@ -7,12 +7,12 @@ local players = game:GetService('Players')
 
 local local_player = players.LocalPlayer
 
-local client = require('./client')
-local cmd = require('./cmd')
-local colors = require('./colors')
-local helper = require('./helper')
+local client = require(script.Parent.client)
+local cmd = require(script.Parent.cmd)
+local colors = require(script.Parent.colors)
+local helper = require(script.Parent.helper)
 
-local ui = require('./ui')
+local ui = require(script.Parent.ui)
 
 local bar = ui.bar.item
 local logs = ui.logs.item
@@ -80,8 +80,8 @@ module.events = {
 		end
 	end),
 
-	bar.FocusLost:Connect(function(input)
-		if not input then --when without pressing enter
+	bar.FocusLost:Connect(function(key)
+		if not key then --when without pressing enter
 			return
 		end
 
@@ -105,7 +105,7 @@ module.events = {
 			task.wait()
 			bar:CaptureFocus()
 
-			for i=1, 10 do --if you see this, then uh... This code is Perfect.
+			for _=1, 10 do --if you see this, then uh... This code is Perfect.
 				logs.CanvasPosition = Vector2.new(0, 10^6)
 				task.wait()
 			end

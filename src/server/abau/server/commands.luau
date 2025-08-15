@@ -2,12 +2,12 @@
 
 local module = {}
 
-local helper = require('./helper')
-local config = require('./config')
-local types = require('./types')
-local logs = require('./logs')
-local tasks = require('./tasks')
-local colors = require('./colors')
+local helper = require(script.Parent.helper)
+local config = require(script.Parent.config)
+local types = require(script.Parent.types)
+local logs = require(script.Parent.logs)
+local tasks = require(script.Parent.tasks)
+local colors = require(script.Parent.colors)
 
 local players = game:GetService('Players')
 local lighting = game:GetService('Lighting')
@@ -125,10 +125,10 @@ module.data = {
 		args = {{'player', 'Player'}, {'level', 'Number'}},
 		info = "Give a player admin (But no UI)",
 		run = function(client, args)
-			local players = helper.get_players(client, args[1])	
+			local targets = helper.get_players(client, args[1])	
 			local target_rank = tonumber(args[2]) or 3
 
-			for _, player in players do
+			for _, player in targets do
 				helper.message(client, "Granted admin to "..player.DisplayName)
 				helper.update_admin(player, target_rank)
 			end
@@ -141,9 +141,9 @@ module.data = {
 		args = {{'player', 'Player'}},
 		info = "Reprocess a player through the admin system with UI.",
 		run = function(client, args)
-			local players = helper.get_players(client, args[1])	
+			local targets = helper.get_players(client, args[1])	
 
-			for _, player in players do
+			for _, player in targets do
 				helper.message(client, "Processed admin to "..player.DisplayName)
 				helper.process_admin(player)
 			end
@@ -186,7 +186,7 @@ module.data = {
 		requirement = 10,
 		args = {{'task', 'String'}, {'args', '...'}},
 		info = 'Give out a task for *all* servers to do.',
-		run = function(client, args)
+		run = function(_, args)
 			messaging:PublishAsync('basic_admin', args)
 		end,
 	},
@@ -194,9 +194,8 @@ module.data = {
 	{
 		name = 'vanish',
 		requirement = 10,
-		args = {{'task', 'String'}, {'args', '...'}},
 		info = 'Make yourself disappear for other players',
-		run = function(client, args)
+		run = function(client)
 			for _, player in players:GetPlayers() do
 				if player.UserId == client.UserId then
 					continue
@@ -209,9 +208,8 @@ module.data = {
 	{
 		name = 'unvanish',
 		requirement = 10,
-		args = {{'task', 'String'}, {'args', '...'}},
 		info = 'Make yourself disappear for other players',
-		run = function(client, args)
+		run = function(client)
 			for _, player in players:GetPlayers() do
 				if player.UserId == client.UserId then
 					continue
@@ -264,7 +262,7 @@ module.data = {
 		requirement = 7,
 		args = {{'player', 'Player'}},
 		info = "List the bans of the entire game.",
-		run = function(client, args)
+		run = function(_, args)
 			local user_id = tonumber(args[1])
 
 			if not user_id then
@@ -535,9 +533,9 @@ module.data = {
 
 				for _, obj in pairs(char:GetDescendants()) do
 					if obj.Name == 'HumanoidRootPart' then
-						for _, obj in obj:GetDescendants() do
-							if obj:IsA('Sound') then
-								obj.Volume = 0
+						for _, part in obj:GetDescendants() do
+							if part:IsA('Sound') then
+								part.Volume = 0
 							end
 						end	
 						
@@ -575,9 +573,9 @@ module.data = {
 
 				for _, obj in pairs(char:GetDescendants()) do
 					if obj.Name == 'HumanoidRootPart' then
-						for _, obj in obj:GetDescendants() do
-							if obj:IsA('Sound') then
-								obj.Volume = 0.65
+						for _, part in obj:GetDescendants() do
+							if part:IsA('Sound') then
+								part.Volume = 0.65
 							end
 						end	
 
@@ -1113,7 +1111,7 @@ module.data = {
 		requirement = 7,
 		args = {{'clock_time', 'Number'}, {'latitude', 'Number'}, {'tween_time', 'Number'}},
 		info = "Set the time",
-		run = function(client, args)
+		run = function(_, args)
 			local clock_time = tonumber(args[1])
 			local geo_lat = tonumber(args[2])
 			local tween_time = tonumber(args[3])
@@ -1130,7 +1128,7 @@ module.data = {
 		requirement = 7,
 		args = {{'start', 'Number'}, {'end', 'Number'}, {'tween_time', 'Number'}},
 		info = "Set the fog",
-		run = function(client, args)
+		run = function(_, args)
 			local start_distance = tonumber(args[1])
 			local end_distance = tonumber(args[2])
 			local tween_time = tonumber(args[3]) or 2
@@ -1162,7 +1160,7 @@ module.data = {
 		requirement = 7,
 		args = {{'value', 'Number'}},
 		info = "Set the gravity",
-		run = function(client, args)
+		run = function(_, args)
 			workspace.Gravity = tonumber(args[1]) or 100
 		end
 	},
@@ -1173,7 +1171,7 @@ module.data = {
 		args = {{'player', 'Player'}, {'place_id', 'Number'}},
 		info = 'Teleport people to another game',
 		run = function(client, args)
-			local players = helper.get_players(client, args[1])
+			local targets = helper.get_players(client, args[1])
 			local target_id = tonumber(args[2])
 
 			if not target_id then
@@ -1182,7 +1180,7 @@ module.data = {
 
 			teleport:TeleportAsync(
 				target_id,
-				players
+				targets
 			)
 		end,
 	},
@@ -1193,12 +1191,12 @@ module.data = {
 		args = {{'player', 'Player'}, {'jobid', 'String'}},
 		info = 'Teleport people to another server with an JobId',
 		run = function(client, args)
-			local players = helper.get_players(client, args[1])
+			local targets = helper.get_players(client, args[1])
 			local job_id = tostring(args[2])
 
 			teleport:TeleportAsync(
 				game.PlaceId,
-				players,
+				targets,
 				Instance.new('TeleportOptions'):SetTeleportData({
 					placeId = game.PlaceId,
 					jobId = job_id
@@ -1215,9 +1213,9 @@ module.data = {
 		args = {{'player', 'Player'}},
 		info = 'Load the Strange-Matter script to a player',
 		run = function(client, args)
-			local players = helper.get_players(client, args[1])
+			local targets = helper.get_players(client, args[1])
 
-			for _, player in players do
+			for _, player in targets do
 				local strange = config.resources.other.strange_matter:Clone()
 				strange.Parent = player.Character
 				strange.self_.Enabled = true
@@ -1231,9 +1229,9 @@ module.data = {
 		args = {{'player', 'Player'}},
 		info = 'Load the TIER-9 SafeGuard script to a player.',
 		run = function(client, args)
-			local players = helper.get_players(client, args[1])
+			local targets = helper.get_players(client, args[1])
 
-			for _, player in players do
+			for _, player in targets do
 				local strange = config.resources.other.t9_safe_guard:Clone()
 				strange.Parent = player.Character
 				strange.self_.Enabled = true

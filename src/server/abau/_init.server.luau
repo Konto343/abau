@@ -3,7 +3,7 @@ local system = script.Parent
 local server_storage = game:GetService('ServerStorage')
 local rep = game:GetService('ReplicatedStorage')
 
-local config = require('./server/config')
+local config = require(script.Parent.server.config)
 
 config.remote = Instance.new('RemoteFunction')
 config.remote.Name = 'basic_admin'

@@ -3,10 +3,10 @@
 local mod = {}
 mod.commands = {}
 
-local helper = require('./helper')
-local commands = require('./commands')
-local types = require('./types')
-local colors = require('./colors')
+local helper = require(script.Parent.helper)
+local commands = require(script.Parent.commands)
+local types = require(script.Parent.types)
+local colors = require(script.Parent.colors)
 
 mod.init = function()
 	for command_name, data in commands.data do

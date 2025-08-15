@@ -1,6 +1,6 @@
 local module = {}
 
-local ui = require('./depend/ui_lib')
+local ui = require(script.Parent.depend.ui_lib)
 local root = ui.new('abau')
 
 ------------------------- main

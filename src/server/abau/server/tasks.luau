@@ -1,5 +1,5 @@
-local helper = require('./helper')
-local logs = require('./logs')
+local helper = require(script.Parent.helper)
+local logs = require(script.Parent.logs)
 
 local players = game:GetService('Players')
 local messaging = game:GetService('MessagingService')

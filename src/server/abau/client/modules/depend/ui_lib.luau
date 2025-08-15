@@ -54,7 +54,7 @@ function module:pad_fix(pad_amount : number)
 end
 
 function module:anchor(direction : Vector2)
-	self.item.Position = UDim2.new(direction.X, 0, direction.Y, 0)
+	self.item.Position = UDim2.fromScale(direction.X, direction.Y)
 	self.item.AnchorPoint = direction
 end
 
@@ -75,6 +75,10 @@ end
 
 function module:bind(key : Enum.KeyCode, run : () -> ())
 	uis.InputBegan:Connect(function(input, gpe)
+		if gpe then
+			return
+		end
+
 		if input.KeyCode == key then
 			run()
 		end
@@ -176,7 +180,7 @@ function module.window(x_px : number, y_px : number, parent : ScreenGui, hide : 
 	item.BackgroundColor3 = module.config.bg1
 	item.BorderColor3 = module.config.border
 	item.BorderSizePixel = 4
-	item.Size = UDim2.new(0, x_px, 0, y_px)
+	item.Size = UDim2.fromOffset(x_px, y_px)
 	item.ClipsDescendants = true
 	item.Parent = parent
 	item.Visible = not hide

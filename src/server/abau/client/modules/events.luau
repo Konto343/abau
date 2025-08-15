@@ -1,7 +1,7 @@
 local module = {}
 
-local debug = require('./debug')
-local helper = require('./helper')
+local debug = require(script.Parent.debug)
+local helper = require(script.Parent.helper)
 
 local players = game:GetService('Players')
 

@@ -8,11 +8,11 @@ export type command = {
 	run : (client : Player, args : {any}, ...any) -> ()
 }
 
-local helper = require('./helper')
-local _client = require('./client')
-local colors = require('./colors')
-local debug = require('./debug')
-local ui = require('./ui')
+local helper = require(script.Parent.helper)
+local _client = require(script.Parent.client)
+local colors = require(script.Parent.colors)
+local debug = require(script.Parent.debug)
+local ui = require(script.Parent.ui)
 
 local lighting = game:GetService('Lighting')
 local players = game:GetService('Players')
@@ -21,7 +21,7 @@ module.data = {
 	{
 		name = 'clear',
 		info = "Clear the command logs",
-		run = function(client)
+		run = function(_)
 			for _, item in ui.logs.item:GetChildren() do
 				if item:IsA('TextBox') then
 					item:Destroy()
@@ -34,7 +34,7 @@ module.data = {
 		name = 'filter',
 		args = {{'regex', 'String'}},
 		info = "Filter the command logs",
-		run = function(client, args)
+		run = function(_, args)
 			for _, item in ui.logs.item:GetChildren() do
 				if item:IsA('TextBox') and string.match(item.Text, args[1]) == nil then
 					item:Destroy()
@@ -57,7 +57,7 @@ module.data = {
 		name = 'noclip',
 		info="Toggle the user to fly and noclip through walls",
 		run = function()
-			local noclip = require('./depend/noclip')
+			local noclip = require(script.Parent.depend.noclip)
 			noclip:toggle()
 		end
 	},	
@@ -76,7 +76,7 @@ module.data = {
 		name = 'view',
 		args = {{'player', 'Player'}},
 		info="Spectate a person",
-		run = function(client,args)
+		run = function(_, args)
 			local player = helper.seek_player(args[1])
 
 			if not player then
@@ -182,7 +182,7 @@ module.data = {
 		requirement = 0,
 		args = {{'seek_term', 'String'}},
 		info = "List all the system commands",
-		run = function(client, args)
+		run = function(_, args)
 			for _, cmd in _client.commands do
 				if args[1] then
 					if cmd.name ~= args[1] then
