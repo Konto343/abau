@@ -13,7 +13,7 @@ config.spawned_items = Instance.new('Folder')
 config.spawned_items.Name = 'spawned_items'
 config.spawned_items.Parent = workspace
 
-config.resources = server_storage:FindFirstChild('ba_resources')
+config.resources = server_storage:FindFirstChild('resources')
 config.system_folder = script.Parent
 
 for _, mod in system.server:GetChildren() do

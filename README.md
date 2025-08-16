@@ -3,6 +3,8 @@ ABAU (Another Bad Administrator Utility)
 
 Another Roblox administrator system for ~~my~~ games to use.
 
+**NOTE:** This is still obviously in the works!
+
 Features:
 - Service Hooking (Chat Tags, Overhead Tags)
 - Modular UI (In-Dev)
