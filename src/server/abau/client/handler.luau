@@ -20,7 +20,7 @@ local logs = ui.logs.item
 local command_history = {}
 local pointer_pos = 0
 
-module.get_predictions = function(user_input : string)
+module.get_predictions = function(user_input : string) : {string}
 	local predictions = {}
 	
 	for _, data in client.commands do
@@ -48,12 +48,40 @@ end
 
 module.events = {
 	bar:GetPropertyChangedSignal('Text'):Connect(function()
-		local command = cmd.get_command(bar.Text:split(' ')[1])
+		local user_input = bar.Text:split(' ')[1]
+		local command = cmd.get_command(user_input)
+		local predictions = module.get_predictions(user_input)
+
 		if command then
 			bar.TextColor3 = Color3.fromRGB(255,255,255)
-			return
+		else
+			bar.TextColor3 = Color3.fromRGB(255,0,0)
 		end
-		bar.TextColor3 = Color3.fromRGB(255,0,0)
+
+		if #predictions ~= 0 then
+			local first = predictions[1]
+			local prediction = command or cmd.get_command(first)
+			local args = {}
+			
+			if not prediction then
+				return
+			end
+
+			table.remove(predictions, table.find(predictions, prediction.name))
+			
+			if prediction.args then
+				for _, data in prediction.args do
+					table.insert(args, `<{data[1]} : {data[2]}>`)
+				end
+			end
+
+			ui.preview_header.item.Text = helper.color_richtext(prediction.name, colors.blue) .. ' ' .. table.concat(predictions, ' ')
+			ui.preview_details.item.Text = table.concat(args, ' ')
+			ui.preview_desc.item.Text = prediction.info
+			ui.preview.item.Visible = true
+		else
+			ui.preview.item.Visible = false
+		end
 	end),
 
 	input.InputBegan:Connect(function(pressed)
@@ -89,7 +117,7 @@ module.events = {
 			local user_input = bar.Text
 			local target_command = user_input:split(' ')[1]
 			local command_data = cmd.get_command(target_command)
-			helper.log(`> {user_input}`, colors.blue)
+			helper.log(`> {user_input}`, colors.orange)
 			
 			if command_data and not command_data['is_server'] then
 				cmd.process_command(local_player, user_input)
@@ -109,11 +137,11 @@ module.events = {
 				logs.CanvasPosition = Vector2.new(0, 10^6)
 				task.wait()
 			end
-		else --entered with no input
+		else
 			ui.main.item.Visible = false
 			bar:ReleaseFocus()
 		end
-
+	
 		pointer_pos = -1
 	end)
 }

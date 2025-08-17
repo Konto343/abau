@@ -4,9 +4,10 @@ local server_storage = game:GetService('ServerStorage')
 local rep = game:GetService('ReplicatedStorage')
 
 local config = require(script.Parent.server.config)
+local _version = require(script.Parent._version)
 
 config.remote = Instance.new('RemoteFunction')
-config.remote.Name = 'basic_admin'
+config.remote.Name = _version._NAME
 config.remote.Parent = rep 
 
 config.spawned_items = Instance.new('Folder')
@@ -21,5 +22,7 @@ for _, mod in system.server:GetChildren() do
         require(mod)
     end
 end
+
+print(`{_version._NAME} init`)
 
 script:Destroy()

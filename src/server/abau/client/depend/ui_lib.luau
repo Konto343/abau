@@ -14,14 +14,15 @@ module.directions = {
 	['right'] = Vector2.new(1, .5),
 	['left'] = Vector2.new(0, .5),
 
-	['bottom'] = Vector2.new(.5, 0),
-	['top'] = Vector2.new(.5, 1),
+	['bottom'] = Vector2.new(.5, 1),
+	['top'] = Vector2.new(.5, 0),
 }
 
 module.config = {
 	bg1 = Color3.fromRGB(25, 25, 25),
 	bg2 = Color3.fromRGB(38, 38, 38),
 	bg3 = Color3.fromRGB(51, 51, 51),
+	bg4 = Color3.fromRGB(64, 64, 64),
 	
 	fg1 = Color3.fromRGB(255, 255, 255),
 	
@@ -75,10 +76,6 @@ end
 
 function module:bind(key : Enum.KeyCode, run : () -> ())
 	uis.InputBegan:Connect(function(input, gpe)
-		if gpe then
-			return
-		end
-
 		if input.KeyCode == key then
 			run()
 		end

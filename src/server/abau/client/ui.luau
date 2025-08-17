@@ -5,14 +5,12 @@ local root = ui.new('abau')
 
 ------------------------- main
 local main = ui.window(1200, 600, root, true)
+main.item.ClipsDescendants = false
 main:draggable()
 main:anchor(ui.directions.center)
 main:list_layout(0)
 main:pad(20)
 main:corner(10)
-main:bind(Enum.KeyCode.F2, function()
-	main.item.Visible = not main.item.Visible
-end)
 module.main = main
 
 local header = ui.header(main.item, 'ABAU')
@@ -43,10 +41,39 @@ bar.item.BackgroundColor3 = ui.config.bg3
 bar:corner(10)
 bar:pad(10)
 bar:containerize(10)
-bar:bind(Enum.KeyCode.F2, function()
-	bar.item:CaptureFocus()
-end)
 module.bar = bar
+
+local preview = ui.item('Frame', bar.item.Parent)
+preview.item.Visible = false
+preview.item.BackgroundColor3 = ui.config.bg4
+preview.item.Size = UDim2.fromScale(1,2)
+preview:anchor(ui.directions.center)
+preview.item.Position = UDim2.fromScale(.5, 2)
+preview:corner(10)
+preview:pad(10)
+preview:list_layout(5)
+
+local preview_header = ui.header(preview.item, 'Header', 30)
+preview_header.item.RichText = true
+preview_header.item.FontFace.Bold = true
+preview_header.item.TextScaled = true
+preview_header.item.TextXAlignment = Enum.TextXAlignment.Left
+
+local preview_details = ui.header(preview.item, 'Details...', 15)
+preview_details.item.FontFace.Bold = true
+preview_details.item.TextColor3 = ui.config.accent
+preview_details.item.TextScaled = true
+preview_details.item.TextXAlignment = Enum.TextXAlignment.Left
+
+local preview_desc = ui.header(preview.item, 'Description', 15)
+preview_desc.item.FontFace.Bold = true
+preview_desc.item.TextScaled = true
+preview_desc.item.TextXAlignment = Enum.TextXAlignment.Left
+
+module.preview_header = preview_header
+module.preview_details = preview_details
+module.preview_desc = preview_desc
+module.preview = preview
 
 ------------------------- players
 local players = ui.window(400, 600, root, true)
@@ -105,5 +132,16 @@ notepad_textbox.item.MultiLine = true
 notepad_textbox:corner(10)
 notepad_textbox:pad(10)
 notepad_textbox:pad_fix(10)
+
+main:bind(Enum.KeyCode.F2, function()
+	local state = not main.item.Visible
+	main.item.Visible = state
+	
+	if state then
+		bar.item:CaptureFocus()
+	else
+		bar.item:ReleaseFocus()
+	end
+end)
 
 return module

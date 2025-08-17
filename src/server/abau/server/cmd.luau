@@ -25,7 +25,7 @@ end
 
 mod.process_command = function(client : types.player, cmd_string : string)
 	if not helper.is_admin(client.UserId) then
-		for _, player in helper.get_players(nil, 'all') do
+		for _, player in helper.get_players(client, 'all') do
 			helper.announce(player, 'SYSTEM',
 				`Attempted Command execution from: {client.UserId} ({client.DisplayName}) => {tostring(cmd_string)}`
 			)

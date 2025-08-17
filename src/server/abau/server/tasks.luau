@@ -1,5 +1,6 @@
 local helper = require(script.Parent.helper)
 local logs = require(script.Parent.logs)
+local _version = require(script.Parent.Parent._version)
 
 local players = game:GetService('Players')
 local messaging = game:GetService('MessagingService')
@@ -46,7 +47,7 @@ module.data =  {
             local target_id = tonumber(args[1])
             for _, player in players:GetPlayers() do
                 if player.UserId == target_id then
-                    messaging:PublishAsync('basic_admin', {
+                    messaging:PublishAsync(_version._NAME, {
                         'find_success',
                         player.UserId,
                         game.JobId
@@ -65,7 +66,7 @@ module.data =  {
                 local match = name_string:lower():sub(1, #target) == target
 
                 if match then
-                    messaging:PublishAsync('basic_admin', {
+                    messaging:PublishAsync(_version._NAME, {
                         'find_cache_success',
                         target,
                         `[{user_id}] {name_string}`

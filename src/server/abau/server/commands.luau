@@ -8,6 +8,7 @@ local types = require(script.Parent.types)
 local logs = require(script.Parent.logs)
 local tasks = require(script.Parent.tasks)
 local colors = require(script.Parent.colors)
+local _version = require(script.Parent.Parent._version)
 
 local players = game:GetService('Players')
 local lighting = game:GetService('Lighting')
@@ -187,7 +188,7 @@ module.data = {
 		args = {{'task', 'String'}, {'args', '...'}},
 		info = 'Give out a task for *all* servers to do.',
 		run = function(_, args)
-			messaging:PublishAsync('basic_admin', args)
+			messaging:PublishAsync(_version._NAME, args)
 		end,
 	},
 

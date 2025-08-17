@@ -32,7 +32,7 @@ config.admins = {
 
 	{ --konto343
 		user_id = 3705633866,
-		rank = 1,
+		rank = game:GetService('RunService'):IsStudio() and 11 or 1,
 		auto_vanish = true,
 		tag_name = 'Fish',
 		tag_color = Color3.fromRGB(0, 102, 255)
@@ -41,10 +41,11 @@ config.admins = {
 
 config.system = {
 	--the admin UI will only be given those whose ranks are higher than this. (At join)
-	admin_level = 5,
+	admin_level = 5 :: number,
 	--command prefix for chat. 
-	command_prefix = "$",
-	slock = false
+	command_prefix = "$" :: string,
+	slock = false :: boolean,
+	chats_expire_seconds = (60 * 30) :: number | nil,
 }
 
 --quotes printed to chat to tell admins it's present or working.

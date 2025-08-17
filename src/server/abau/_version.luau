@@ -31,9 +31,10 @@ UPDATES:
 3.3.3 = Changed UI, brighter colors, more modern-ish, added Pages to UI (players, console, and notepad)
 3.3.5 = Modular UI with UI lib just made for this admin system. Cool.
 3.3.6 = removed resources instance dependence for client ui, now all code.
+3.4.0 = fixed annoying f2 problems, different coloring, added command preview
 ]]
 
 return {
-    _VERSION = '3.3.7',
+    _VERSION = '3.4.0',
     _NAME = 'ABAU'
 }

@@ -2,8 +2,10 @@
 
 local module = {}
 local config = require(script.Parent.config)
+local _version = require(script.Parent.Parent._version)
 
 local players = game:GetService('Players')
+local teams = game:GetService('Teams')
 
 local attach = config.system_folder.attach
 
@@ -42,8 +44,9 @@ module.process_admin = function(player : Player)
 	if module.is_admin(player.UserId) then
 		local player_gui = player:FindFirstChild('PlayerGui')
 
-		local client = config.system_folder.client:Clone()
+		local client = config.system_folder.client:Clone() :: Folder
 		client.Parent = player_gui
+		client:SetAttribute('host', _version._NAME)
 	end
 end
 
@@ -110,44 +113,56 @@ module.seek_object = function(source : Folder, input : string) : Instance | nil
 	return nil
 end
 
-module.get_players = function(client : Player | nil, arg : string) : {any}
-	local list = {}
-	arg = arg:lower()
+module.get_players = function(client : Player, arg : string) : {any}
+	local list = {} :: {Player}
+	local args = arg:lower():split(',')
 
-	if arg == "me" or arg == "self" then
-		table.insert(list,client)
+	for _, arg in args do
+		if arg:sub(1,1) == '@' then
+			local team_name = arg:sub(2)
+			local team = teams:FindFirstChild(team_name) :: Team
 
-	elseif arg == "others" then
-		for _,player in pairs(players:GetPlayers()) do
-			if player ~= client then
-				table.insert(list,player)
+			if team then
+				for _, player in team:GetPlayers() do
+					table.insert(list, player)
+				end
 			end
 		end
 
-	elseif arg == "all" or arg == "everyone" or arg == "*" then
-		for _,player in pairs(players:GetPlayers()) do
-			table.insert(list,player)
-		end
+		if arg == "me" or arg == "self" then
+			table.insert(list, client)
 
-	elseif arg == "admins" then
-		for _,player in pairs(players:GetPlayers()) do
-			if module.is_admin(player.UserId) then
+		elseif arg == "others" then
+			for _,player in pairs(players:GetPlayers()) do
+				if player ~= client then
+					table.insert(list,player)
+				end
+			end
+
+		elseif arg == "all" or arg == "everyone" or arg == "*" then
+			for _,player in pairs(players:GetPlayers()) do
 				table.insert(list,player)
 			end
-		end
 
-	elseif arg == "nonadmins" then
-		for _,player in pairs(players:GetPlayers()) do
-			if module.is_admin(player.UserId) == false then
-				table.insert(list,player)
+		elseif arg == "admins" then
+			for _,player in pairs(players:GetPlayers()) do
+				if module.is_admin(player.UserId) then
+					table.insert(list,player)
+				end
 			end
-		end
 
-	else
-		local seek = module.seek_player(arg)
+		elseif arg == "nonadmins" then
+			for _,player in pairs(players:GetPlayers()) do
+				if module.is_admin(player.UserId) == false then
+					table.insert(list,player)
+				end
+			end
+		else
+			local seek = module.seek_player(arg)
 
-		if seek then
-			table.insert(list, seek)
+			if seek then
+				table.insert(list, seek)
+			end
 		end
 	end
 

@@ -87,9 +87,15 @@ module.events = {
 
 	players.PlayerRemoving:Connect(function(player : Player)
 		logs.join_leaves[#logs.join_leaves+1] = `[{os.date('%c')}] LEAVE => {player.DisplayName} | {player.UserId}`
+		
+		if config.system.chats_expire_seconds then
+			task.delay(config.system.chats_expire_seconds, function()
+				logs.chats[player.UserId] = nil
+			end)
+		end
 	end),
 
-	messaging:SubscribeAsync('basic_admin', function(message)  
+	messaging:SubscribeAsync(_version._NAME, function(message)  
 		local data = message.Data :: {}
 		local time_sent = message.Sent :: string
 		
